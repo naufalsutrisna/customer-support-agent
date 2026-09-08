@@ -20,3 +20,41 @@ order_items = pd.read_csv(ORDER_ITEM_PATH)
 products = pd.read_csv(PRODUCT_PATH)
 category_translation = pd.read_csv(CATEGORY_TRANSLATION_PATH)
 support = pd.read_csv(SUPPORT_PATH)
+
+
+def get_customer_orders(customer_unique_id):
+    customer_ids = customers[
+        customers["customer_unique_id"] == customer_unique_id
+    ]["customer_id"]
+
+    customer_orders = orders[
+        orders["customer_id"].isin(customer_ids)
+    ]
+
+    return customer_orders
+
+
+def get_order_details(order_id):
+    order = orders[
+        orders["order_id"] == order_id
+    ]
+
+    items = order_items[
+        order_items["order_id"] == order_id
+    ]
+
+    return order, items
+
+
+def get_product_details(product_id):
+    product = products[
+        products["product_id"] == product_id
+    ]
+
+    product = product.merge(
+        category_translation,
+        on="product_category_name",
+        how="left"
+    )
+
+    return product
