@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from app.services.chat_service import process_message
 
@@ -9,6 +9,16 @@ router = APIRouter()
 class ChatRequest(BaseModel):
     message: str
     conversation_id: str | None = None
+
+    @field_validator("message")
+    @classmethod
+    def validate_message(cls, value: str) -> str:
+        value = value.strip()
+
+        if not value:
+            raise ValueError("Message cannot be empty.")
+
+        return value
 
 
 class ChatResponse(BaseModel):
