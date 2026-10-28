@@ -1,9 +1,12 @@
-from fastapi import APIRouter
+import logging
+
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, field_validator
 
 from app.services.chat_service import process_message
 
 router = APIRouter()
+logger = logging.getLogger(__name__)
 
 
 class ChatRequest(BaseModel):
@@ -14,10 +17,8 @@ class ChatRequest(BaseModel):
     @classmethod
     def validate_message(cls, value: str) -> str:
         value = value.strip()
-
         if not value:
             raise ValueError("Message cannot be empty.")
-
         return value
 
 
@@ -33,7 +34,14 @@ def health_check():
 
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    return process_message(
-        message=request.message,
-        conversation_id=request.conversation_id,
-    )
+    try:
+        return process_message(
+            message=request.message,
+            conversation_id=request.conversation_id,
+        )
+    except Exception:
+        logger.exception("Failed to process chat message.")
+        raise HTTPException(
+            status_code=500,
+            detail="An error occurred while processing your message.",
+        )
