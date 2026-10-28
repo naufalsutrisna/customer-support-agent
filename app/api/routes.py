@@ -8,9 +8,11 @@ router = APIRouter()
 
 class ChatRequest(BaseModel):
     message: str
+    conversation_id: str | None = None
 
 
 class ChatResponse(BaseModel):
+    conversation_id: str
     answer: str
 
 
@@ -21,6 +23,7 @@ def health_check():
 
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
-    answer = process_message(request.message)
-
-    return {"answer": answer}
+    return process_message(
+        message=request.message,
+        conversation_id=request.conversation_id,
+    )
