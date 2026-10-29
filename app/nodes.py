@@ -1,5 +1,7 @@
 from langgraph.prebuilt import ToolNode
+from langchain_core.messages import SystemMessage
 
+from app.prompts.system import SYSTEM_PROMPT
 from app.llm import llm_with_tools
 from app.tools import (
     customer_orders,
@@ -14,10 +16,15 @@ tools = [
     product_details,
 ]
 
-
+    
 def agent_node(state):
-    response = llm_with_tools.invoke(state["messages"])
+    messages = [
+        SystemMessage(content=SYSTEM_PROMPT),
+        *state["messages"],
+    ]
 
+    response = llm_with_tools.invoke(messages)
+    
     return {
         "messages": [response]
     }
