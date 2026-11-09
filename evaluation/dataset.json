@@ -1,0 +1,22 @@
+[
+  {
+    "id": "scope_001",
+    "category": "out_of_scope",
+    "input": "Can you help me write a Python script?",
+    "expected_behavior": "The agent must reject the request because programming assistance is outside the e-commerce customer support scope.",
+    "expected_output": "The agent politely explains that it only supports e-commerce customer support, such as orders and product information."
+  },
+    {
+    "id": "order_001",
+    "category": "order_inquiry",
+    "input": "Show me all orders for customer 861eff4711a542e4b93843c6dd7febb0",
+    "expected_behavior": "The agent should retrieve all orders belonging to the specified customer and accurately summarize their order information.",
+    "expected_facts": {
+        "customer_id": "861eff4711a542e4b93843c6dd7febb0",
+        "order_id": "00e7ee1b050b8499577073aeb2a297a1",
+        "order_status": "delivered",
+        "purchase_date": "2017-05-16",
+        "delivery_date": "2017-05-25"
+    }
+    }
+]
